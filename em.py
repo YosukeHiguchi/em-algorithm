@@ -1,15 +1,13 @@
 import pandas as pd
 import numpy as np
 
-
 def gaussian(mu, sig):
-    def N(x):
+    def f(x):
         return np.exp(-0.5 * (x - mu) ** 2 / sig) / np.sqrt(2 * np.pi * sig)
-    return N
+    return f
 
 def calc_mean(m, gauss):
     return m * gauss / np.sum(m * gauss)
-
 
 if __name__ == '__main__':
     # data
@@ -26,36 +24,29 @@ if __name__ == '__main__':
 
         matrix = []
         for d in data:
-            matrix.append(calc_mean(m, N(d)))
+            matrix.append(np.append(d, calc_mean(m, N(d))))
 
-        df = pd.DataFrame(matrix, columns=list("ABC"))
-
-        print ("df")
-        print (df.round(3))
-
-        # print (N(8))
-        # print (calc_mean(m, N(8)))
+        df = pd.DataFrame(matrix, columns=list("xABC"))
+        print ("mean values")
+        print (df.round(3), "\n")
 
         m = np.array([])
         mu = np.array([])
         sig = np.array([])
 
-        for c in df.columns:
+        for c in "ABC":
             tot = sum(df[c])
-            #print (tot)
-            #print (tot / dataN)
             m = np.append(m, tot / dataN)
 
             nmu = sum(df[c].values * data) / tot
-            #print (nmu)
             mu = np.append(mu, nmu)
 
             nsig = sum(df[c].values * (data - nmu) ** 2) / tot
-            #print (nsig)
             sig = np.append(sig, nsig)
 
 
-        print ("new param: ")
-        print (m.round(3))
-        print (mu.round(3))
-        print (sig.round(3))
+        print ("new param")
+        print ("m    :", m.round(3))
+        print ("mu   :", mu.round(3))
+        print ("sig^2:", sig.round(3))
+        print ("\n")
